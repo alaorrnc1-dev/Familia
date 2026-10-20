@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Família Nogueira: Nossas Histórias & Risadas 🌟</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f1017;
+      --card-bg: #181a26;
+      --primary: #ff5277;
+      --secondary: #00e5ff;
+      --accent-yellow: #ffca28;
+      --accent-purple: #ab47bc;
+      --accent-green: #26a69a;
+      --text-light: #f5f7fa;
+      --text-muted: #94a3b8;
+      --shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+      --glow: 0 0 25px rgba(0, 229, 255, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Bolinhas flutuantes de fundo (Animação Alegre) */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.25;
+      animation: floatUp 20s infinite linear;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) rotate(0deg); }
+      100% { transform: translateY(-10vh) rotate(360deg); }
+    }
+
+    /* Tela de Login */
+    #login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #1e2238 0%, #0f1017 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border-radius: 30px;
+      padding: 45px 35px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent-yellow), var(--accent-purple));
+    }
+
+    .login-card h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, var(--secondary), var(--accent-yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      font-size: 1rem;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      font-size: 1rem;
+      color: var(--text-light);
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .input-group input:focus {
+      border-color: var(--secondary);
+      box-shadow: var(--glow);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(45deg, var(--primary), var(--accent-purple));
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255, 82, 119, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255, 82, 119, 0.6);
+    }
+
+    .error-msg {
+      color: var(--primary);
+      font-weight: 700;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    /* Conteúdo Principal */
+    #main-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      padding: 50px 20px 20px;
+    }
+
+    .title-album {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 3.2rem;
+      background: linear-gradient(45deg, var(--secondary), var(--accent-yellow), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle-album {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Seção de Destaque da Família */
+    .family-banner {
+      max-width: 900px;
+      margin: 25px auto 10px;
+      padding: 20px 30px;
+      background: linear-gradient(135deg, rgba(24, 26, 38, 0.9), rgba(30, 34, 54, 0.9));
+      border-radius: 20px;
+      border: 1px solid rgba(0, 229, 255, 0.15);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .banner-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .banner-stat .number {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      color: var(--secondary);
+    }
+
+    .banner-stat .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* Galeria de Fotos */
+    .gallery-container {
+      max-width: 1350px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 25px;
+      width: 100%;
+    }
+
+    .photo-item {
+      background: var(--card-bg);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      border: 2px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .photo-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(0, 229, 255, 0.2);
+      border-color: rgba(0, 229, 255, 0.35);
+    }
+
+    .photo-card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.08);
+    }
+
+    /* Efeito de brilho ao passar o mouse */
+    .photo-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 45%,
+        rgba(255, 255, 255, 0.25) 50%,
+        transparent 55%
+      );
+      transform: rotate(45deg) translate(-100%, -100%);
+      transition: transform 0.7s ease;
+      pointer-events: none;
+    }
+
+    .photo-card:hover::after {
+      transform: rotate(45deg) translate(100%, 100%);
+    }
+
+    .photo-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(15, 16, 23, 0.85);
+      color: var(--secondary);
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      border-radius: 10px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+    }
+
+    /* Espaço para descrição da foto */
+    .photo-caption {
+      padding: 16px;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .caption-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: var(--text-light);
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: none;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .caption-input:focus {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--secondary);
+    }
+
+    .save-status {
+      font-size: 0.75rem;
+      color: var(--accent-yellow);
+      text-align: right;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Botão Adicionar Mais Fotos */
+    .add-section {
+      text-align: center;
+      margin: 30px 0 60px;
+    }
+
+    .btn-add {
+      background: linear-gradient(45deg, var(--secondary), var(--accent-purple));
+      color: var(--bg-dark);
+      border: none;
+      padding: 16px 32px;
+      border-radius: 18px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(0, 229, 255, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-add:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5);
+    }
+
+    /* Modal / Lightbox */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 11, 16, 0.94);
+      backdrop-filter: blur(12px);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .modal-content-wrapper {
+      position: relative;
+      max-width: 90%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .modal-content {
+      max-width: 100%;
+      max-height: 72vh;
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.85);
+      border: 3px solid rgba(255,255,255,0.12);
+      object-fit: contain;
+    }
+
+    .modal-caption-text {
+      margin-top: 18px;
+      color: var(--text-light);
+      font-size: 1.15rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .modal-close, .modal-nav {
+      position: absolute;
+      background: rgba(24, 26, 38, 0.85);
+      color: var(--text-light);
+      border: 2px solid rgba(255,255,255,0.12);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s ease;
+      z-index: 3001;
+    }
+
+    .modal-close:hover, .modal-nav:hover {
+      background: var(--secondary);
+      color: var(--bg-dark);
+      border-color: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .modal-close {
+      top: 25px;
+      right: 25px;
+    }
+
+    .modal-prev {
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .modal-next {
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Rodapé & Player de Música */
+    footer {
+      background: var(--card-bg);
+      border-top: 2px solid rgba(255, 255, 255, 0.05);
+      padding: 35px 20px;
+      margin-top: auto;
+      box-shadow: 0 -10px 35px rgba(0,0,0,0.4);
+    }
+
+    .music-player-container {
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 20px 28px;
+      border-radius: 24px;
+    }
+
+    .song-info {
+      font-weight: 700;
+      color: var(--secondary);
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .btn-player {
+      background: rgba(255, 255, 255, 0.07);
+      border: none;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s ease;
+      color: var(--text-light);
+    }
+
+    .btn-player:hover {
+      background: var(--secondary);
+      color: var(--bg-dark);
+      transform: scale(1.1);
+    }
+
+    .btn-play-main {
+      width: 54px;
+      height: 54px;
+      background: linear-gradient(45deg, var(--primary), var(--accent-purple));
+      color: white;
+      font-size: 1.35rem;
+      box-shadow: 0 4px 18px rgba(255, 82, 119, 0.45);
+    }
+
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .volume-control input {
+      accent-color: var(--secondary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .title-album { font-size: 2.2rem; }
+      .gallery-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+      .modal-nav { width: 42px; height: 42px; font-size: 1.1rem; }
+      .modal-prev { left: 10px; }
+      .modal-next { right: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Partículas Alegres de Fundo -->
+  <div class="bg-particles" id="particles-container"></div>
+
+  <!-- Tela de Login -->
+  <div id="login-screen">
+    <div class="login-card">
+      <h2>Família Nogueira ✨</h2>
+      <p>Entre com as credenciais para ver nossas histórias e risadas</p>
+      
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="input-group">
+          <label for="username">Usuário</label>
+          <input type="text" id="username" placeholder="Digite o usuário" required autocomplete="username">
+        </div>
+        <div class="input-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="Digite a senha" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-login">Entrar no Álbum 💛</button>
+        <div class="error-msg" id="login-error">Usuário ou senha incorretos!</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div id="main-content">
+    <header>
+      <h1 class="title-album">Família Nogueira: Nossas Histórias & Risadas 🌟</h1>
+      <p class="subtitle-album">Um cantinho especial guardando sorrisos, viagens, almoços em família e momentos inesquecíveis. 📸💛</p>
+    </header>
+
+    <!-- Banner com Detalhes e Estatísticas -->
+    <section class="family-banner">
+      <div class="banner-stat">
+        <span class="number" id="total-photos-stat">50</span>
+        <span class="label">Fotos Carregadas</span>
+      </div>
+      <div class="banner-stat">
+        <span class="number">10</span>
+        <span class="label">Trilhas Sonoras</span>
+      </div>
+      <div class="banner-stat">
+        <span class="number">∞</span>
+        <span class="label">Boas Memórias</span>
+      </div>
+    </section>
+
+    <main>
+      <!-- Galeria de Fotos -->
+      <div class="gallery-container" id="gallery"></div>
+
+      <!-- Botão para carregar mais fotos -->
+      <div class="add-section">
+        <button class="btn-add" onclick="loadMorePhotos()">Carregar Mais Fotos ➕</button>
+      </div>
+    </main>
+
+    <!-- Rodapé com Player de Música -->
+    <footer>
+      <div class="music-player-container">
+        <div class="song-info" id="song-info-text">Carregando Playlist...</div>
+        <div class="player-controls">
+          <button class="btn-player" onclick="prevSong()" title="Música Anterior">⏮️</button>
+          <button class="btn-player btn-play-main" id="play-btn" onclick="togglePlay()" title="Reproduzir / Pausar">▶️</button>
+          <button class="btn-player" onclick="nextSong()" title="Próxima Música">⏭️</button>
+        </div>
+        <div class="volume-control">
+          <span>🔊</span>
+          <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.7" oninput="changeVolume(this.value)">
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal / Lightbox -->
+  <div class="modal" id="photo-modal" onclick="handleModalClick(event)">
+    <button class="modal-close" onclick="closeModal()" title="Fechar">✕</button>
+    <button class="modal-nav modal-prev" onclick="changeModalPhoto(-1)" title="Anterior">❮</button>
+    <div class="modal-content-wrapper">
+      <img class="modal-content" id="modal-img" src="" alt="Foto Ampliada">
+      <div class="modal-caption-text" id="modal-caption"></div>
+    </div>
+    <button class="modal-nav modal-next" onclick="changeModalPhoto(1)" title="Próxima">❯</button>
+  </div>
+
+  <!-- Elemento de Áudio Oculto -->
+  <audio id="audio-player"></audio>
+
+  <script>
+    // Gerar Bolinhas Flutuantes de Fundo
+    (function createParticles() {
+      const container = document.getElementById('particles-container');
+      const colors = ['#00e5ff', '#ff5277', '#ffca28', '#ab47bc', '#26a69a'];
+      for (let i = 0; i < 18; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const size = Math.random() * 40 + 15;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.animationDuration = `${Math.random() * 12 + 12}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(particle);
+      }
+    })();
+
+    // Configurações do Álbum
+    let displayedPhotosCount = 50;
+    const maxPossiblePhotos = 200;
+    let activeModalIndex = 1;
+
+    // Playlist de Músicas (musica1.mp3 até musica10.mp3)
+    const playlist = [
+      { name: "Música 1", file: "musica1.mp3" },
+      { name: "Música 2", file: "musica2.mp3" },
+      { name: "Música 3", file: "musica3.mp3" },
+      { name: "Música 4", file: "musica4.mp3" },
+      { name: "Música 5", file: "musica5.mp3" },
+      { name: "Música 6", file: "musica6.mp3" },
+      { name: "Música 7", file: "musica7.mp3" },
+      { name: "Música 8", file: "musica8.mp3" },
+      { name: "Música 9", file: "musica9.mp3" },
+      { name: "Música 10", file: "musica10.mp3" }
+    ];
+    let currentSongIndex = 0;
+    let isPlaying = false;
+
+    const audioPlayer = document.getElementById('audio-player');
+    const playBtn = document.getElementById('play-btn');
+    const songInfoText = document.getElementById('song-info-text');
+
+    // Autenticação de Login
+    function handleLogin(event) {
+      event.preventDefault();
+      const user = document.getElementById('username').value.trim().toLowerCase();
+      const pass = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('login-error');
+
+      if (user === 'familia' && pass === '1624') {
+        const loginScreen = document.getElementById('login-screen');
+        const mainContent = document.getElementById('main-content');
+
+        loginScreen.style.opacity = '0';
+        loginScreen.style.visibility = 'hidden';
+
+        setTimeout(() => {
+          loginScreen.style.display = 'none';
+          mainContent.style.display = 'flex';
+          setTimeout(() => {
+            mainContent.style.opacity = '1';
+          }, 50);
+        }, 500);
+
+        initGallery();
+        initPlayer();
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    // Inicializar Galeria de Fotos
+    function initGallery() {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+
+      for (let i = 1; i <= displayedPhotosCount; i++) {
+        const photoItem = createPhotoCard(i);
+        gallery.appendChild(photoItem);
+      }
+      document.getElementById('total-photos-stat').innerText = displayedPhotosCount;
+    }
+
+    function createPhotoCard(index) {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'photo-item';
+
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'photo-card';
+      cardDiv.onclick = () => openModal(index);
+
+      const img = document.createElement('img');
+      img.src = `foto${index}.jpeg`;
+      img.alt = `Foto ${index}`;
+      img.loading = 'lazy';
+      
+      img.onerror = function() {
+        this.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23181a26"/><text x="50%" y="50%" fill="%2394a3b8" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="13">foto${index}.jpeg</text></svg>`;
+      };
+
+      const badge = document.createElement('div');
+      badge.className = 'photo-badge';
+      badge.innerText = `#${index}`;
+
+      cardDiv.appendChild(img);
+      cardDiv.appendChild(badge);
+
+      const captionDiv = document.createElement('div');
+      captionDiv.className = 'photo-caption';
+
+      const textarea = document.createElement('textarea');
+      textarea.className = 'caption-input';
+      textarea.rows = 2;
+      textarea.placeholder = 'Escreva uma legenda...';
+      textarea.value = localStorage.getItem(`familia_nogueira_caption_${index}`) || '';
+      
+      const statusSpan = document.createElement('div');
+      statusSpan.className = 'save-status';
+      statusSpan.innerText = 'Salvo ✓';
+
+      textarea.oninput = () => {
+        localStorage.setItem(`familia_nogueira_caption_${index}`, textarea.value);
+        statusSpan.style.opacity = '1';
+        setTimeout(() => { statusSpan.style.opacity = '0'; }, 1500);
+      };
+
+      captionDiv.appendChild(textarea);
+      captionDiv.appendChild(statusSpan);
+
+      itemDiv.appendChild(cardDiv);
+      itemDiv.appendChild(captionDiv);
+
+      return itemDiv;
+    }
+
+    function loadMorePhotos() {
+      displayedPhotosCount += 10;
+      if (displayedPhotosCount > maxPossiblePhotos) displayedPhotosCount = maxPossiblePhotos;
+      initGallery();
+    }
+
+    // Modal / Lightbox
+    function openModal(index) {
+      activeModalIndex = index;
+      const modal = document.getElementById('photo-modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalCaption = document.getElementById('modal-caption');
+
+      modalImg.src = `foto${index}.jpeg`;
+      const savedCaption = localStorage.getItem(`familia_nogueira_caption_${index}`) || `Foto #${index}`;
+      modalCaption.innerText = savedCaption;
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('photo-modal').style.display = 'none';
+    }
+
+    function handleModalClick(event) {
+      if (event.target.id === 'photo-modal') {
+        closeModal();
+      }
+    }
+
+    function changeModalPhoto(direction) {
+      activeModalIndex += direction;
+      if (activeModalIndex < 1) activeModalIndex = displayedPhotosCount;
+      if (activeModalIndex > displayedPhotosCount) activeModalIndex = 1;
+      
+      const modalImg = document.getElementById('modal-img');
+      const modalCaption = document.getElementById('modal-caption');
+      
+      modalImg.src = `foto${activeModalIndex}.jpeg`;
+      modalCaption.innerText = localStorage.getItem(`familia_nogueira_caption_${activeModalIndex}`) || `Foto #${activeModalIndex}`;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('photo-modal');
+      if (modal.style.display === 'flex') {
+        if (e.key === 'ArrowRight') changeModalPhoto(1);
+        if (e.key === 'ArrowLeft') changeModalPhoto(-1);
+        if (e.key === 'Escape') closeModal();
+      }
+    });
+
+    // Player de Música
+    function initPlayer() {
+      loadSong(currentSongIndex);
+      audioPlayer.addEventListener('ended', nextSong);
+      audioPlayer.volume = 0.7;
+    }
+
+    function loadSong(index) {
+      currentSongIndex = index;
+      audioPlayer.src = playlist[currentSongIndex].file;
+      songInfoText.innerText = `Tocando: ${playlist[currentSongIndex].name} (${currentSongIndex + 1}/${playlist.length})`;
+    }
+
+    function togglePlay() {
+      if (audioPlayer.paused) {
+        audioPlayer.play().then(() => {
+          isPlaying = true;
+          playBtn.innerText = '⏸️';
+        }).catch(() => {
+          songInfoText.innerText = "Adicione as músicas (musica1.mp3...)";
+        });
+      } else {
+        audioPlayer.pause();
+        isPlaying = false;
+        playBtn.innerText = '▶️';
+      }
+    }
+
+    function nextSong() {
+      currentSongIndex = (currentSongIndex + 1) % playlist.length;
+      loadSong(currentSongIndex);
+      if (isPlaying) audioPlayer.play();
+    }
+
+    function prevSong() {
+      currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+      loadSong(currentSongIndex);
+      if (isPlaying) audioPlayer.play();
+    }
+
+    function changeVolume(val) {
+      audioPlayer.volume = val;
+    }
+  </script>
+</body>
+</html>
